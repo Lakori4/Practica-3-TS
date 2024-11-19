@@ -27,8 +27,17 @@ const handler = async(req: Request): Promise<Response> => {
     if (path === "/ubicacion") {
       const ubi = await req.json();
 
-      if (!ubi.nombre || ubi.buenos < 0) {
+      if (!ubi.nombre || ubi.coordenadas.x == undefined || ubi.coordenadas.y == undefined || ubi.buenos === undefined) {
         return new Response ("Bad request", { status: 400} )
+      }
+
+      if (ubi.coordenadas.x  < -180 || ubi.coordenadas.x > 180) {
+        return new Response ("Longitud no válida", { status: 410} )
+      }
+      
+
+      if (ubi.coordenadas.y  < -90 || ubi.coordenadas.x > 90) {
+        return new Response ("Latitud no válida", { status: 411} )
       }
 
       const ubiDB = await lugarCollection.findOne({
