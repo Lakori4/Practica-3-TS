@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb'
 import type { LugarModel, NinoModel } from "./type.ts";
+import { getNinoLugar } from "./resolves.ts";
 
 const url = Deno.env.get("MONGO_URL")
 
@@ -21,10 +22,12 @@ const handler = async(req: Request): Promise<Response> => {
   if(method === "GET") {
     if(path === "/ninos/buenos") {
       const result = await ninoCollection.find({comportamiento:true}).toArray()
-      return new Response(JSON.stringify(result))
+      const resultFinal = await Promise.all(result.map(e => getNinoLugar(e,lugarCollection))) 
+      return new Response(JSON.stringify(resultFinal))
     } else if(path === "/ninos/malos") {
       const result = await ninoCollection.find({comportamiento:false}).toArray()
-      return new Response(JSON.stringify(result))
+      const resultFinal = await Promise.all(result.map(e => getNinoLugar(e,lugarCollection))) 
+      return new Response(JSON.stringify(resultFinal))
     }
   } else if(method === "  POST") {
 
