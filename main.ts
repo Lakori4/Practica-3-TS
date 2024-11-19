@@ -15,7 +15,39 @@ const lugarCollection = db.collection<LugarModel>("lugares")
 
 const handler = async(req: Request): Promise<Response> => {
 
-  return new Response("Buenas")
+  const url = new URL(req.url)
+  const method = req.method
+  const path = url.pathname
+
+  if (method === "GET") {
+
+  }
+
+  else if (method === "POST") {
+    if (path === "/ubicacion") {
+      const ubi = await req.json();
+
+      if (!ubi.nombre || ubi.buenos < 0) {
+        return new Response ("Bad request", { status: 400} )
+      }
+
+      const ubiDB = await lugarCollection.findOne({
+        nombre: ubi.nombre
+      })
+
+      if (ubiDB) { return new Response ("Ubicación ya existe", {status: 409})}
+
+      const insertedId = await lugarCollection.insertOne ({
+        nombre: ubi.nombre,
+        coordenadas: ubi.coordenadas,
+        buenos: ubi.buenos
+      })
+    }
+  }
+
+  
+   return new Response ("Endpoint not found", {status: 404})
+  
 }
 
 Deno.serve({port:6768}, handler)
