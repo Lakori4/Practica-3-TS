@@ -9,4 +9,12 @@ const client = new MongoClient(url)
 await client.connect()
 console.log("Conectado correctamente a la base de datos")
 const db = client.db("Practica3")
-const collection = db.collection("ninos")
+const collectionNinos = db.collection("ninos")
+const collectionLugares = db.collection("lugares")
+
+const handler = async(req: Request): Promise<Response> => {
+
+  return new Response("Buenas")
+}
+
+Deno.serve({port:6768}, handler)
