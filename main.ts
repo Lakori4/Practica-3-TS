@@ -42,6 +42,15 @@ const handler = async(req: Request): Promise<Response> => {
         coordenadas: ubi.coordenadas,
         buenos: ubi.buenos
       })
+
+      return new Response (
+        JSON.stringify({
+          nombre: ubi.nombre,
+          coordenadas: ubi.coordenadas,
+          buenos: ubi.buenos,
+          id: insertedId,
+        }), {status: 201}
+      );
     }
   }
 
