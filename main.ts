@@ -14,8 +14,23 @@ const ninoCollection = db.collection<NinoModel>("ninos")
 const lugarCollection = db.collection<LugarModel>("lugares")
 
 const handler = async(req: Request): Promise<Response> => {
+  const url = new URL(req.url)
+  const method = req.method
+  const path = url.pathname
 
-  return new Response("Buenas")
+  if(method === "GET") {
+    if(path === "/ninos/buenos") {
+      const result = await ninoCollection.find({comportamiento:true}).toArray()
+      return new Response(JSON.stringify(result))
+    } else if(path === "/ninos/malos") {
+      const result = await ninoCollection.find({comportamiento:false}).toArray()
+      return new Response(JSON.stringify(result))
+    }
+  } else if(method === "  POST") {
+
+  }
+
+  return new Response("Endpoint not found", {status:404})
 }
 
 Deno.serve({port:6768}, handler)
