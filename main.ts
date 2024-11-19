@@ -1,8 +1,12 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { MongoClient } from 'mongodb'
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+const url = Deno.env.get("MONGO_URL")
+
+if(!url) Deno.exit(1)
+
+const client = new MongoClient(url)
+
+await client.connect()
+console.log("Conectado correctamente a la base de datos")
+const db = client.db("Practica3")
+const collection = db.collection("ninos")
