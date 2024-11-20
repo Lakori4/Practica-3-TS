@@ -19,7 +19,7 @@ export const getNinoLugar = async(
     lugarCollection: Collection<LugarModel>
 ):Promise<Nino> => {
     return ({
-        _id: user._id.toString(),
+        _id: user._id!.toString(),
         nombre: user.nombre,
         comportamiento: user.comportamiento ? "bueno": "malo",
         ubicacion: await getLugarID(user.ubicacion,lugarCollection)
