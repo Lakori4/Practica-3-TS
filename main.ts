@@ -18,7 +18,6 @@ const handler = async(req: Request): Promise<Response> => {
   const url = new URL(req.url)
   const method = req.method
   const path = url.pathname
-
   if (method === "GET") {
 
   }
@@ -27,7 +26,7 @@ const handler = async(req: Request): Promise<Response> => {
     if (path === "/ubicacion") {
       const ubi = await req.json();
 
-      if (!ubi.nombre || ubi.coordenadas.x == undefined || ubi.coordenadas.y == undefined || ubi.buenos === undefined) {
+      if (!ubi.nombre || ubi.coordenadas.x == undefined || ubi.coordenadas.y == undefined || ubi.buenos < 0) {
         return new Response ("Bad request", { status: 400} )
       }
 
@@ -52,14 +51,8 @@ const handler = async(req: Request): Promise<Response> => {
         buenos: ubi.buenos
       })
 
-      return new Response (
-        JSON.stringify({
-          nombre: ubi.nombre,
-          coordenadas: ubi.coordenadas,
-          buenos: ubi.buenos,
-          id: insertedId,
-        }), {status: 201}
-      )
+      return new Response ("Lugar introducido correctamente", {status: 201} );
+
     }
 
     if (path === "/ninos") {
