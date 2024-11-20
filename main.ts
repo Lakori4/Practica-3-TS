@@ -59,7 +59,43 @@ const handler = async(req: Request): Promise<Response> => {
           buenos: ubi.buenos,
           id: insertedId,
         }), {status: 201}
+      )
+    }
+
+    if (path === "/ninos") {
+      const nino = await req.json()
+
+      if (!nino.nombre || !nino.ubicacion) {
+        return new Response ("Bad request", { status: 400} )
+      }
+
+      const ninoDB = await ninoCollection.findOne({
+        nombre: nino.nombre
+      })
+
+      if (ninoDB) { return new Response ("Niño ya existe", {status: 409})}
+
+      const ubiDB = await lugarCollection.findOne({
+        _id : nino.ubicacion
+      })
+
+      if (!ubiDB) { return new Response ("Ubicación no existe", {status: 408})}
+
+      const insertedId = await ninoCollection.insertOne ({
+        nombre: nino.nombre,
+        comportamiento: nino.comportamiento,
+        ubicacion: nino.ubicacion
+      })
+
+      return new Response (
+        JSON.stringify({
+          nombre: nino.nombre,
+          coordenadas: nino.coordenadas,
+          buenos: nino.buenos,
+          id: insertedId,
+        }), {status: 201}
       );
+      
     }
   }
 
