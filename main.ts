@@ -52,14 +52,8 @@ const handler = async(req: Request): Promise<Response> => {
         buenos: ubi.buenos
       })
 
-      return new Response (
-        JSON.stringify({
-          nombre: ubi.nombre,
-          coordenadas: ubi.coordenadas,
-          buenos: ubi.buenos,
-          id: insertedId,
-        }), {status: 201}
-      )
+      return new Response ("Lugar introducido correctamente", {status: 201} );
+
     }
 
     if (path === "/ninos") {
