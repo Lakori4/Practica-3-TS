@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import type { LugarModel, NinoModel } from "./type.ts";
 
 const url = Deno.env.get("MONGO_URL")
@@ -65,7 +65,7 @@ const handler = async(req: Request): Promise<Response> => {
     if (path === "/ninos") {
       const nino = await req.json()
 
-      if (!nino.nombre || !nino.ubicacion) {
+      if (!nino.nombre || !nino.ubicacion || !(nino.comportamiento === "bueno" || nino.comportamiento === "malo")){
         return new Response ("Bad request", { status: 400} )
       }
 
@@ -76,25 +76,26 @@ const handler = async(req: Request): Promise<Response> => {
       if (ninoDB) { return new Response ("Niño ya existe", {status: 409})}
 
       const ubiDB = await lugarCollection.findOne({
-        _id : nino.ubicacion
+        _id : new ObjectId(nino.ubicacion)
       })
 
       if (!ubiDB) { return new Response ("Ubicación no existe", {status: 408})}
 
+      let comportamiento: boolean
+
+      if (nino.comportamiento === "bueno") {
+        comportamiento = true
+      } else {
+        comportamiento = false
+      }
+
       const insertedId = await ninoCollection.insertOne ({
         nombre: nino.nombre,
-        comportamiento: nino.comportamiento,
-        ubicacion: nino.ubicacion
+        comportamiento,
+        ubicacion: new ObjectId(nino.ubicacion)
       })
 
-      return new Response (
-        JSON.stringify({
-          nombre: nino.nombre,
-          coordenadas: nino.coordenadas,
-          buenos: nino.buenos,
-          id: insertedId,
-        }), {status: 201}
-      );
+      return new Response ("Niño introducido correctamente", {status: 201} );
       
     }
   }
