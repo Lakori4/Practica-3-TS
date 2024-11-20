@@ -27,6 +27,6 @@ export type Lugar = {
 export type Nino = {
     _id: string
     nombre: string,
-    comportamiento: boolean,
+    comportamiento: string,
     ubicacion: Lugar
 }
