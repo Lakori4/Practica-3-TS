@@ -2,9 +2,9 @@ import { MongoClient, ObjectId } from 'mongodb'
 import type { LugarModel, NinoModel } from "./type.ts";
 import { getNinoLugar, haversine, setNinosBuenos } from "./resolves.ts";
 
-const url = Deno.env.get("MONGO_URL")
+const url = "mongodb+srv://aperedas:18062004@backend.61kmp.mongodb.net/?retryWrites=true&w=majority&appName=Backend"
 
-if(!url) Deno.exit(1)
+//if(!url) Deno.exit(1)
 
 const client = new MongoClient(url)
 
